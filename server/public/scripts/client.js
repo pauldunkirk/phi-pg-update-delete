@@ -14,9 +14,9 @@ $(document).ready(function(){
           var $newBook = $('<tr>'); // Creating a new row for each book
           $newBook.data('id', currentBook.id);
           $newBook.append('<td><input value="' + currentBook.title + '" class="bookTitle"></td>');
-          $newBook.append('<td>' + currentBook.author + '</td>');
-          $newBook.append('<td>' + currentBook.edition + '</td>');
-          $newBook.append('<td>' + currentBook.publisher + '</td>');
+          $newBook.append('<td><input value="' + currentBook.author + '" class="bookAuthor"></td>');
+          $newBook.append('<td><input value="' + currentBook.edition + '" class="bookEdition"></td>');
+          $newBook.append('<td><input value="' + currentBook.publisher + '" class="bookPublsher"></td>');
           $newBook.append('<td><button class="deleteButton">Delete</button></td>');
           $newBook.append('<td><button class="saveButton">Save</button></td>');
           $('#bookShelf').prepend($newBook);
@@ -56,14 +56,20 @@ $(document).ready(function(){
         console.log(response);
         getBookData();
       }
-    })
+    });
   });
 
   $('#bookShelf').on('click', '.saveButton', function(){
     var idOfBookToSave = $(this).parent().parent().data().id;
     var titleOfBookToSave = $(this).parent().parent().find('.bookTitle').val();
+    var authorOfBookToSave = $(this).parent().parent().find('.bookAuthor').val();
+    var editionOfBookToSave = $(this).parent().parent().find('.bookEdition').val();
+    var publisherOfBookToSave = $(this).parent().parent().find('.bookPublisher').val();
     var bookObjectToSave = {
-      title: titleOfBookToSave
+      title: titleOfBookToSave,
+      author: authorOfBookToSave,
+      edition: editionOfBookToSave,
+      publisher: publisherOfBookToSave
     };
     // for waldo, number 48 -> /books/save/48
     $.ajax({
@@ -73,8 +79,11 @@ $(document).ready(function(){
       success: function(response) {
         console.log(response);
         getBookData();
-      }
-    })
-  });
-
-});
+      }, //end success
+      error: function(response){
+        console.log(response);
+        $('#errorMessage').append('<p>'+ response.statusText + '</p>');
+      } // end error
+    }); //end of AJAX
+  }); // end of click
+});//end of doc ready
